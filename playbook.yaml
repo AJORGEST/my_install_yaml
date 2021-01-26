@@ -1,0 +1,33 @@
+---
+- hosts: all
+  become: true
+  vars_files:
+   - variables.yaml
+      
+  tasks: 
+   - name: Install prerequisitos sites
+     apt : name=aptitude update_cache=yes state=latest force_apt_get=yes
+    
+  # Sudo Group Setup
+   - name: ensure that the sudo group exists
+     group:
+      name: sudo 
+     state: present
+   
+   - name: Allow 'sudo' group to have passwordless sudo
+     lineinfile:
+     path: /etc/sudoers
+     state: present
+     regexp: '^%sudo'
+     line: '%sudo ALL=(ALL) NOPASSWD: ALL'
+     validate: '/usr/sbin/visudo -cf %'
+   
+   - name: Create a new regular user whit sudo privileges
+     user: 
+      name: "{{ create_user }}"
+     state: present
+     groups: sudo 
+     append: true
+     create_home: true
+     shell: /bin/bash
+

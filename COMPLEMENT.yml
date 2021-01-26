@@ -1,0 +1,12 @@
+    - name: set autorized key for remote user
+      authorized_key:
+      user: "{{ create_user }}"
+      state: present 
+      key: "{{ copy_local_key }}"
+
+      - name: Disable password authentication for root
+      lineinfile:
+      path: /etc/ssh/sshd_config
+      state: present 
+      regexp: '^#?PermitRootLogin'
+      line: 'PermitRootLogin prohibit-password' 
