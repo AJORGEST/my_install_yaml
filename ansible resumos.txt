@@ -1,80 +1,41 @@
-sudo su 
-ls
+INSTALL ANSIBLE
+
 sudo apt update
 sudo apt-add-repository ppa:ansible/ansible
 sudo apt install ansible
-cd /etc/ansible/
-ls
-ansible-playbook.yaml
-ls
-cd ~
-ls
-mv playbook.yml /home/ansible
-sudo mv playbook.yml /home/ansible
-sudo mv playbook.yml /etc/ansible
-ls
-cd /etc/ansible/
-ls
-pwd
-cd /tmp/
-ls
-cd ..
-ls
-mv playbook.yml playbook.yaml
-nano variables.yaml
-ls
-nano variables.yaml
+
+
 ansible --version
-ansible-playbook playbook.yaml 
-sudo ansible-playbook playbook.yaml 
-ansible-playbook playbook.yaml 
+
+usuario do grupo sudo
+ 
 nano /etc/sudoers
 sudo nano /etc/sudoers
-ansible-playbook playbook.yaml 
-ls
-sudo nano variables.yaml 
-pwd
-ansible-playbook playbook.yaml 
-ls
-cat variables.yaml 
-ansible-playbook playbook.yaml 
-cat playbook.yaml 
-ansible-playbook playbook.yaml 
-ls
+
+
+criando playbook 
+
 ansible-playbook hostname.yaml 
 ansible-playbook -i /home/ansible hostname.yaml 
-cd /etc/ansible/
-ls
-vim playbook.yml 
-ansible-playbook playbook.yml 
-ls
-cp playbook.yml variables.yml
-sudo nano variables.yml
-cat variables.yml 
-ansible-playbook playbook.yml 
-ls
-nano hosts 
-sudo nano hosts 
-ansible-playbook playbook.yml 
-ls
-ansible-playbook playbook.yml 
-clear
-ansible-playbook playbook.yml 
+
+commandos:
+  
 ansible --list all
-sudo nano hosts 
-ansible --list all
-ansible-playbook playbook.yml 
-ls
-sudo nano dev
-ls
+
 ansible -i /etc/ansible/dev --list-hosts
+
 ansible -i /etc/ansible/dev --list-hosts "*"
+
 ansible -i /etc/ansible/dev --list-hosts webservers
+
 ansible -i /etc/ansible/dev -m ping all
-sudo nano dev
+
 ansible -i /etc/ansible/dev -m ping all
-sudo nano dev
+
 ansible -i /etc/ansible/dev -m ping all
-ansible-playbook playbook.yml 
-clear
-ls
+
+ansible-inventory --list -y
+
+verificando espaço em discos
+
+ansible all -a "df -h" -u root
