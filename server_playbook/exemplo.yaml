@@ -1,0 +1,69 @@
+---
+- hosts: all
+  become: true
+  vars_files:
+    - vars/default.yml
+
+  tasks:
+    - name: Install aptitude using apt
+      apt: name=aptitude state=latest update_cache=yes force_apt_get=yes
+
+    - name: Install required system packages
+      apt: name={{ item }} state=latest update_cache=yes
+      loop: [ 'apt-transport-https', 'ca-certificates', 'curl', 'software-properties-common', 'python3-pip', 'virtualenv', 'python3-setuptools' 'gnupg-agent']
+
+    - name: Add Docker GPG apt Key
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+
+    - name: Add Docker Repository
+      apt_repository:
+        repo: deb https://download.docker.com/linux/ubuntu bionic stable
+        state: present
+
+    - name: Update apt and install docker-ce
+      apt: update_cache=yes name=docker-ce-cli name=containerd.io state=latest
+
+    - name: Install Docker Module for Python
+      pip:
+        name: docker
+
+    - name: Add a GPG apt Key
+      apt_key:
+        url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+        state: present
+
+    - name: Create document root
+      file:
+        path: "/etc/apt/soucers.list.d "{{ kubernetes.list }}"
+        state: directory
+        owner: "{{ app_user }}"
+        mode: '0755'
+        
+    - name: Copy o arquivo page
+      template:
+        src: "files/kubernetes.list"
+        dest: "/etc/apt/soucers.list.d {{ kubernetes.list }}/kubernetes.list"
+
+    - name: Install packages kubernets
+      apt: name={{ item }} state=latest update_cache=yes
+      loop: [ 'kubelet', 'kubeadm', 'kubectl', ' 'gnupg-agent']
+
+    - name: Install the packages kubernetes
+      apt: name={{ item }} state=latest update_cache=yes
+      loop: [ 'apt-mark', 'kubeadm', 'kubectl', 'kubelet', 'hold']     
+    
+    - name: Pull default Docker image
+      docker_image:
+        name: "{{ default_container_image }}"
+        source: pull
+
+    # Creates the number of containers defined by the variable create_containers, using values from vars file
+    - name: Create default containers
+      docker_container:
+        name: "{{ default_container_name }}{{ item }}"
+        image: "{{ default_container_image }}"
+        command: "{{ default_container_command }}"
+        state: present
+      with_sequence: count={{ create_containers }}

@@ -1,0 +1,22 @@
+---
+- hosts: all
+  tasks: 
+    - name: Install Apache
+      apt: name={{item}} state=present update_cache=yes
+      with_items:
+        - apache2
+        - a2ensite
+        - a2enmod
+        - python-pip
+        - python-virtualenv
+         
+    - name: iniciando o apache
+      service: name=apache2 state=started enabled=yes 
+
+    - name: Habilitando modulo apache
+      apache2_module: state=present name=wsgi
+      notify: restart apache2 
+
+  handlers: 
+   - name:  restart apache2
+     service: name=apache2 state=restarted  

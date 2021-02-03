@@ -1,0 +1,8 @@
+---
+- hosts: webserver
+  tasks: 
+     - service: name=nginx state=stopped
+  tasks: 
+     - service: name=nginx state=started
+      
+  
